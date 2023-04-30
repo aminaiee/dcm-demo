@@ -1,8 +1,32 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Prequisites
 
-## Getting Started
+First, create .env file in the root directory of the project with the following variables defined:
+```
+DCM_AUTH_CLIENT_ID=<client-id>
+DCM_AUTH_CLIENT_SECRET=<client-secret>
+DCM_AUTH_DOMAIN=<dcm-auth-domain, for example dcm-test.eu.auth0.com>
+DCM_API_BASE_URL=<dcm-api-base-url, for example https://test.service.crowdeagle.com.au/v1>
+```
 
-First, run the development server:
+## Running the server
+
+### using docker-compose
+
+Build and run the docker container with the following command. This will start the server on port 3000. If port 3000 is in use on your host, change the port number in [docker-compose.yml](docker-compose.yml)
+
+```
+docker-compose up --build
+```
+
+### using docker
+Build and run the docker container with the following command. This will start the server on port 3000. If port 3000 is in use on your host, change the port number in the command to a different one.
+
+```
+docker build -t dcm-demo .
+docker run -p 3000:80 -it dcm-demo 
+```
+
+### using npm
 
 ```bash
 npm run dev
@@ -12,27 +36,16 @@ yarn dev
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## DCM Demo
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. This will redirect you to the default DCM project dashboard at [http://localhost:3000/projects/ce2735c0-91ff-4bb2-a460-309e083f9705/3](http://localhost:3000/projects/ce2735c0-91ff-4bb2-a460-309e083f9705/3)
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+If you want to see data from another project, change the URL address according to the following format:
+```
+http://localhost:3000/projects/<project-id>/<calibration-id>
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+The get a list of calibrationIds for the project visit project page (minimal) with the following format:
+```
+http://localhost:3000/projects/<project-id>
+```
+For example: [http://localhost:3000/projects/ce2735c0-91ff-4bb2-a460-309e083f9705](http://localhost:3000/projects/ce2735c0-91ff-4bb2-a460-309e083f9705)
