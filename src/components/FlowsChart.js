@@ -1,6 +1,8 @@
+import config from "@/config";
 import {useEffect, useRef} from "react";
 
 import {getDate} from "@/utils/datetime";
+import {getAverageGroupedByDay} from "@/utils/timeseries";
 import {
 	CategoryScale,
 	Chart as ChartJS,
@@ -14,7 +16,6 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-luxon';
 import {Line} from 'react-chartjs-2';
-import {getAverageGroupedByDay} from "@/utils/timeseries";
 
 
 ChartJS.register(
@@ -29,8 +30,9 @@ ChartJS.register(
 );
 
 
-export default function FlowsChart({flows}) {
+export default function FlowsChart({flows, numberOfDays}) {
 	const chartRef = useRef()
+	numberOfDays = numberOfDays || config.dataRetentionDays
 
 	const options = {
 		responsive: true,
@@ -51,7 +53,7 @@ export default function FlowsChart({flows}) {
 	}
 
 	const data = {
-		labels: [...Array(10).keys()].map(day => {
+		labels: [...Array(numberOfDays).keys()].map(day => {
 			return getDate(day)
 		}),
 		datasets: [

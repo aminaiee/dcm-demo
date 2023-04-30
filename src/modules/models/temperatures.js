@@ -1,7 +1,7 @@
 import config from '@/config';
-import {getTemperatures} from '../whether';
+import {getTemperatures} from '../wheather';
 import {ModelBase} from './base';
-import {ONE_DAY_IN_MSEC, getDate} from '@/utils/datetime';
+import {MSECS_IN_A_DAY, getDate} from '@/utils/datetime';
 
 
 export class Temperatures extends ModelBase {
@@ -21,7 +21,7 @@ export class Temperatures extends ModelBase {
 			return
 
 		let now = Date.now()
-		let endTimestamp = this.#startTimestamp + ONE_DAY_IN_MSEC
+		let endTimestamp = this.#startTimestamp + MSECS_IN_A_DAY
 
 		try {
 			let data = await getTemperatures(this.latitude, this.longitude, this.#startTimestamp)

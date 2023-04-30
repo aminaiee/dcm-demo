@@ -1,4 +1,4 @@
-import {ONE_DAY_IN_MSEC, getStartOfDate} from "./datetime"
+import {MSECS_IN_A_DAY, getStartOfDate} from "./datetime"
 
 export const getAverageGroupedByDay = (data) => {
 	let endTime = data.reduce((accumulator, item) => Math.max(accumulator, item.x), 0)
@@ -15,7 +15,7 @@ export const getAverageGroupedByDay = (data) => {
 		}
 
 		data = data.filter(item => item.x < currentTime)
-		currentTime = currentTime - ONE_DAY_IN_MSEC
+		currentTime = currentTime - MSECS_IN_A_DAY
 	}
 
 	return groups
@@ -36,7 +36,7 @@ export const getPeakGroupedByDay = (data) => {
 		}
 
 		data = data.filter(item => item.x < currentTime)
-		currentTime = currentTime - ONE_DAY_IN_MSEC
+		currentTime = currentTime - MSECS_IN_A_DAY
 	}
 
 	return groups

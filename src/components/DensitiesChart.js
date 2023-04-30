@@ -14,6 +14,7 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-luxon';
 import {Line} from 'react-chartjs-2';
+import config from "@/config";
 
 
 ChartJS.register(
@@ -28,9 +29,9 @@ ChartJS.register(
 );
 
 
-
-export default function DensitiesChart({densities}) {
+export default function DensitiesChart({densities, numberOfDays}) {
 	const chartRef = useRef()
+	numberOfDays = numberOfDays || config.dataRetentionDays
 
 	const options = {
 		responsive: true,
@@ -51,7 +52,7 @@ export default function DensitiesChart({densities}) {
 	}
 
 	const data = {
-		labels: [...Array(10).keys()].map(day => {
+		labels: [...Array(numberOfDays).keys()].map(day => {
 			return getDate(day)
 		}),
 		datasets: [

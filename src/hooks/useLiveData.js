@@ -25,6 +25,11 @@ export default function useLiveData({projectId, calibrationId}) {
 
 		let eventSource = new EventSource(`/api/events/${projectId}/${calibrationId}`);
 
+		eventSource.onerror = (e) => {
+			console.log(e)
+			eventSource.close()
+		}
+
 		eventSource.addEventListener("flow", e => {
 			let {t, speed} = JSON.parse(e.data)
 			data.flows.push({x: new Date(t), y: speed})
@@ -73,7 +78,6 @@ export default function useLiveData({projectId, calibrationId}) {
 
 		})
 
-
 		eventSource.addEventListener("temperature", e => {
 			let {t, temperature} = JSON.parse(e.data)
 			if (t && temperature)
@@ -86,6 +90,13 @@ export default function useLiveData({projectId, calibrationId}) {
 				})
 				setTemperatures(data.temperatures)
 			}, 500)
+		})
+
+		window.addEventListener("beforeunload", () => {
+			try {
+				eventSource.close()
+			} catch (err) {
+			}
 		})
 
 		return () => {

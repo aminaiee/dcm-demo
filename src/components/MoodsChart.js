@@ -14,6 +14,7 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-luxon';
 import {Line} from 'react-chartjs-2';
+import config from "@/config";
 
 
 ChartJS.register(
@@ -27,8 +28,9 @@ ChartJS.register(
 	Legend
 );
 
-export default function MoodsChart({moods}) {
+export default function MoodsChart({moods, numberOfDays}) {
 	const chartRef = useRef()
+	numberOfDays = numberOfDays || config.dataRetentionDays
 
 	const options = {
 		responsive: true,
@@ -49,8 +51,7 @@ export default function MoodsChart({moods}) {
 	}
 
 	const data = {
-		//TODO: use data retention days
-		labels: [...Array(10).keys()].map(day => {
+		labels: [...Array(numberOfDays).keys()].map(day => {
 			return getDate(day)
 		}),
 		datasets: [

@@ -1,3 +1,4 @@
+import config from "@/config";
 import {useEffect, useRef} from "react";
 
 import {getDate} from "@/utils/datetime";
@@ -28,8 +29,9 @@ ChartJS.register(
 );
 
 
-export default function TemperaturesChart({temperatures}) {
+export default function TemperaturesChart({temperatures, numberOfDays}) {
 	const chartRef = useRef()
+	numberOfDays = numberOfDays || config.dataRetentionDays
 
 	const options = {
 		responsive: true,
@@ -50,7 +52,7 @@ export default function TemperaturesChart({temperatures}) {
 	}
 
 	const data = {
-		labels: [...Array(10).keys()].map(day => {
+		labels: [...Array(numberOfDays).keys()].map(day => {
 			return getDate(day)
 		}),
 		datasets: [

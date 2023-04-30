@@ -1,4 +1,4 @@
-import {ONE_DAY_IN_MSEC, getDate} from '@/utils/datetime';
+import {MSECS_IN_A_DAY, getDate} from '@/utils/datetime';
 import {getDensities} from '../dcm';
 import {ModelBase} from './base';
 import config from '@/config';
@@ -16,7 +16,7 @@ export class Densities extends ModelBase {
 			return
 
 		let now = Date.now()
-		let endTimestamp = this.#startTimestamp + ONE_DAY_IN_MSEC
+		let endTimestamp = this.#startTimestamp + MSECS_IN_A_DAY
 
 		try {
 			let data = await getDensities(this.calibrationId, this.#startTimestamp, endTimestamp)

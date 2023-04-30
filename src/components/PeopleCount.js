@@ -1,30 +1,24 @@
-import {useEffect, useState} from 'react';
+import usePeopleCount from '@/hooks/usePeopleCount';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 
 export default function PeopleCount({headcounts, maxPeopleCount}) {
 	let timeWindowSec = 5 * 60
-	let [count, setCount] = useState(0)
-
-	useEffect(() => {
-		let minValidTime = Date.now() - timeWindowSec * 1000
-
-		let mostRecent = headcounts.reduce((accumulator, item) => {
-			if (item.x > accumulator.x && item.x > minValidTime) {
-				return item
-			} else {
-				return accumulator
-			}
-		}, {x: 0, y: 0})
-
-		setCount(mostRecent.y)
-	}, [headcounts])
-
+	let count = usePeopleCount({headcounts, timeWindowSec})
 	let percent = Math.floor(Math.min(maxPeopleCount, count) / maxPeopleCount * 100)
+
+	let variant = 'info'
+	if (count > maxPeopleCount)
+		variant = 'danger'
+	else if (count > maxPeopleCount / 2)
+		variant = 'warning'
 
 	return (
 		<>
 			People Count: {count}
-			<ProgressBar now={percent} />
+			<ProgressBar
+				now={percent}
+				variant={variant}
+			/>
 		</>
 	)
 }

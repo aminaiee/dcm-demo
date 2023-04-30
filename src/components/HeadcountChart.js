@@ -1,3 +1,4 @@
+import config from "@/config";
 import {useEffect, useRef} from "react";
 
 import {getDate} from "@/utils/datetime";
@@ -27,8 +28,9 @@ ChartJS.register(
 	Legend
 );
 
-export default function HeadcountChart({headcounts}) {
+export default function HeadcountChart({headcounts, numberOfDays}) {
 	const chartRef = useRef()
+	numberOfDays = numberOfDays || config.dataRetentionDays
 
 	const options = {
 		responsive: true,
@@ -49,7 +51,7 @@ export default function HeadcountChart({headcounts}) {
 	};
 
 	const data = {
-		labels: [...Array(10).keys()].map(day => {
+		labels: [...Array(numberOfDays).keys()].map(day => {
 			return getDate(day)
 		}),
 		datasets: [

@@ -1,7 +1,7 @@
 import config from '@/config';
 import {getMoods} from '../dcm';
 import {ModelBase} from './base';
-import {ONE_DAY_IN_MSEC, getDate} from '@/utils/datetime';
+import {MSECS_IN_A_DAY, getDate} from '@/utils/datetime';
 
 
 export class Moods extends ModelBase {
@@ -17,7 +17,7 @@ export class Moods extends ModelBase {
 			return
 
 		let now = Date.now()
-		let endTimestamp = this.#startTimestamp + ONE_DAY_IN_MSEC
+		let endTimestamp = this.#startTimestamp + MSECS_IN_A_DAY
 
 		try {
 			let data = await getMoods(this.calibrationId, this.#startTimestamp, endTimestamp)

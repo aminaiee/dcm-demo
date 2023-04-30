@@ -1,3 +1,4 @@
+import config from "@/config";
 import {useEffect, useRef} from "react";
 
 import {getDate} from "@/utils/datetime";
@@ -31,8 +32,9 @@ ChartJS.register(
 
 ;
 
-export default function PeackAverageChart({average, max, title}) {
+export default function PeackAverageChart({average, max, title, numberOfDays}) {
 	const chartRef = useRef()
+	numberOfDays = numberOfDays || config.dataRetentionDays
 
 	const options = {
 		responsive: true,
@@ -53,8 +55,7 @@ export default function PeackAverageChart({average, max, title}) {
 	}
 
 	const chartData = {
-		//TODO: use data retention days
-		labels: [...Array(10).keys()].map(day => {
+		labels: [...Array(numberOfDays).keys()].map(day => {
 			return getDate(day)
 		}),
 		datasets: [
