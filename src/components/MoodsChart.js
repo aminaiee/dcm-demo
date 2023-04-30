@@ -27,26 +27,26 @@ ChartJS.register(
 	Legend
 );
 
-export const options = {
-	responsive: true,
-	scales: {
-		x: {
-			type: 'time',
-		},
-	},
-	plugins: {
-		legend: {
-			display: false,
-		},
-		title: {
-			display: true,
-			text: 'Moods',
-		},
-	},
-};
-
 export default function MoodsChart({moods}) {
 	const chartRef = useRef()
+
+	const options = {
+		responsive: true,
+		scales: {
+			x: {
+				type: 'time',
+			},
+		},
+		plugins: {
+			legend: {
+				display: false,
+			},
+			title: {
+				display: true,
+				text: 'Moods',
+			},
+		},
+	}
 
 	const data = {
 		//TODO: use data retention days

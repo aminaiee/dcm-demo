@@ -27,26 +27,27 @@ ChartJS.register(
 	Legend
 );
 
-export const options = {
-	responsive: true,
-	scales: {
-		x: {
-			type: 'time',
-		},
-	},
-	plugins: {
-		legend: {
-			display: false,
-		},
-		title: {
-			display: true,
-			text: 'Temperatures',
-		},
-	},
-};
 
 export default function TemperaturesChart({temperatures}) {
 	const chartRef = useRef()
+
+	const options = {
+		responsive: true,
+		scales: {
+			x: {
+				type: 'time',
+			},
+		},
+		plugins: {
+			legend: {
+				display: false,
+			},
+			title: {
+				display: true,
+				text: 'Temperatures',
+			},
+		},
+	}
 
 	const data = {
 		labels: [...Array(10).keys()].map(day => {

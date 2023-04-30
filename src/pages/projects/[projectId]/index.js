@@ -1,13 +1,8 @@
 import {getCalibrationIds} from "@/modules/dcm";
 import Link from "next/link";
-import {useEffect} from "react";
 
 export default function Page(props) {
   let {projectId, calibrations} = props
-
-  useEffect(() => {
-    console.log(props)
-  }, [])
 
   return (
     <ul>
@@ -15,7 +10,7 @@ export default function Page(props) {
         calibrations.map(id => {
           return (
             <li key={id}>
-              <Link href={`/project/${projectId}/${id}`}> Calibration {id} </Link>
+              <Link href={`/projects/${projectId}/${id}`}> Calibration {id} </Link>
             </li>
           )
         })

@@ -1,16 +1,12 @@
 version: '3.4'
 
 services:
-    redis-stack:
-        image: redis/redis-stack-server
+    dcm-interview:
         restart: always
+        image: dcm-interview
+        build:
+                context: .
+                dockerfile: Dockerfile
         ports:
-          - "6379:6379"
-        networks:
-          dcm:
-            aliases:
-              - redis.dcm.local
+                - "3000:80"
 
-networks:
-  dcm:
-    name: dcm.local

@@ -34,7 +34,7 @@ export class Densities extends ModelBase {
 				this.#startTimestamp == now ? this.updateInterval * 1000 : 100
 			)
 		} catch (err) {
-			//console.log(err)
+			console.log(err)
 			setTimeout(() => this.onFetchData(), 1000)
 		}
 	}
