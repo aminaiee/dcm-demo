@@ -8,7 +8,7 @@ export default function handler(request, response) {
 
 
   let closeConnection = () => {
-    console.log("+++++++++++++++++ connection closed")
+    console.log("Closing connection...")
     p.close()
     if (response.finished || response.writableEnded) {
       response.end();
