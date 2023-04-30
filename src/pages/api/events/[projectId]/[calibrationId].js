@@ -1,15 +1,16 @@
 import {DCMProject} from "@/modules/models/project";
 
-
 export default function handler(request, response) {
   const {projectId, calibrationId} = request.query
 
   let p = new DCMProject(projectId, calibrationId)
 
+
+
   let closeConnection = () => {
     console.log("+++++++++++++++++ connection closed")
     p.close()
-    if (!response.finished) {
+    if (response.finished || response.writableEnded) {
       response.end();
       console.log('Stopped sending events.');
     }
@@ -23,6 +24,7 @@ export default function handler(request, response) {
 
     const eventString = `event: ${eventType}\ndata: ${JSON.stringify(data)}\n\n`
     response.write(eventString);
+    response.flush()
   }
 
   p.flows.addEventListener(({timestamp, speed}) => {
@@ -44,6 +46,30 @@ export default function handler(request, response) {
   request.on('close', () => {
     closeConnection()
   });
+
+  request.on('end', () => {
+    closeConnection()
+  });
+
+  request.on('error', () => {
+    closeConnection()
+  });
+
+  request.on('aborted', () => {
+    closeConnection()
+  });
+
+  request.socket.on('close', () => {
+    closeConnection()
+  })
+
+  response.socket.on('close', () => {
+    closeConnection()
+  })
+
+  response.on('close', () => {
+    closeConnection()
+  })
 
   p.start()
   response.writeHead(200, {

@@ -1,9 +1,9 @@
 version: '3.4'
 
 services:
-    dcm-interview:
+    dcm-demo:
         restart: always
-        image: dcm-interview
+        image: dcm-demo
         build:
                 context: .
                 dockerfile: Dockerfile
