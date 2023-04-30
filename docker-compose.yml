@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+    redis-stack:
+        image: redis/redis-stack-server
+        restart: always
+        ports:
+          - "6379:6379"
+        networks:
+          dcm:
+            aliases:
+              - redis.dcm.local
+
+networks:
+  dcm:
+    name: dcm.local
