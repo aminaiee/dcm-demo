@@ -6,47 +6,46 @@ export default function handler(request, response) {
 
   let p = new DCMProject(projectId, calibrationId)
 
-  p.flows.addEventListener(({timestamp, speed}) => {
-    if (!response.finished) {
-      const eventString = `event: flow\ndata: {"t": ${timestamp}, "speed": ${speed}}\n\n`
-      response.write(eventString);
-    }
-  })
-
-
-  p.moods.addEventListener(({timestamp, mood}) => {
-    if (!response.finished) {
-      const eventString = `event: mood\ndata: {"t": ${timestamp}, "mood": ${mood}}\n\n`
-      response.write(eventString);
-    }
-  })
-
-
-  p.densities.addEventListener(({timestamp, density, headcount}) => {
-    if (!response.finished) {
-      const eventString = `event: density\ndata: {"t": ${timestamp}, "density": ${density}, "headcount": ${headcount}}\n\n`
-      response.write(eventString);
-    }
-  })
-
-  p.temperatures.addEventListener(({timestamp, temperature}) => {
-    if (!response.finished) {
-      const eventString = `event: temperature\ndata: {"t": ${timestamp}, "temperature": ${temperature}}\n\n`
-      response.write(eventString);
-    }
-  })
-
-  request.on('close', () => {
-    console.log('request closed')
+  let closeConnection = () => {
+    console.log("+++++++++++++++++ connection closed")
     p.close()
     if (!response.finished) {
       response.end();
       console.log('Stopped sending events.');
     }
+  }
+
+  let writeEvent = (eventType, data) => {
+    if (response.finished) {
+      closeConnection()
+      return
+    }
+
+    const eventString = `event: ${eventType}\ndata: ${JSON.stringify(data)}\n\n`
+    response.write(eventString);
+  }
+
+  p.flows.addEventListener(({timestamp, speed}) => {
+    writeEvent('flow', {t: timestamp, speed})
+  })
+
+  p.moods.addEventListener(({timestamp, mood}) => {
+    writeEvent('mood', {t: timestamp, mood})
+  })
+
+  p.densities.addEventListener(({timestamp, density, headcount}) => {
+    writeEvent('density', {t: timestamp, density, headcount})
+  })
+
+  p.temperatures.addEventListener(({timestamp, temperature}) => {
+    writeEvent('temperature', {t: timestamp, temperature})
+  })
+
+  request.on('close', () => {
+    closeConnection()
   });
 
   p.start()
-
   response.writeHead(200, {
     'Connection': 'keep-alive',
     'Content-Type': 'text/event-stream',

@@ -14,6 +14,7 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-luxon';
 import {Line} from 'react-chartjs-2';
+import {getAverageGroupedByDay} from "@/utils/timeseries";
 
 
 ChartJS.register(
@@ -63,6 +64,7 @@ export default function FlowsChart({flows}) {
 
 	useEffect(() => {
 		const chart = chartRef.current
+		getAverageGroupedByDay(flows)
 		chart.update()
 	}, [flows])
 

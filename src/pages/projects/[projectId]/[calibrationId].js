@@ -7,6 +7,8 @@ import MoodsChart from "@/components/MoodsChart";
 import TemperaturesChart from "@/components/TemperaturesChart";
 import useLiveData from "@/hooks/useLiveData";
 import 'chartjs-adapter-luxon';
+import PeackAverageChart from "@/components/PeakAverageChart";
+import {getAverageGroupedByDay, getPeakGroupedByDay} from "@/utils/timeseries";
 
 
 export default function Page() {
@@ -16,21 +18,38 @@ export default function Page() {
 
   return (
     <>
-      <div style={{width: "50%", maxHeight: "400px"}}>
+      <div style={{maxHeight: "200px", display: "flex", flexDirection: "row"}}>
+        <DensitiesChart densities={densities} />
+        <MoodsChart moods={moods} />
+        <FlowsChart flows={flows} />
         <TemperaturesChart temperatures={temperatures} />
       </div>
-      <div style={{width: "50%", maxHeight: "400px"}}>
-        <DensitiesChart densities={densities} />
+      <div style={{maxHeight: "200px", display: "flex", flexDirection: "row"}}>
+        <PeackAverageChart
+          average={getAverageGroupedByDay(densities)}
+          max={getPeakGroupedByDay(densities)}
+          title={"Peak / Average Density"}
+        />
+        <PeackAverageChart
+          average={getAverageGroupedByDay(moods)}
+          max={getPeakGroupedByDay(moods)}
+          title={"Peak / Average Mood"}
+        />
+        <PeackAverageChart
+          average={getAverageGroupedByDay(flows)}
+          max={getPeakGroupedByDay(flows)}
+          title={"Peak / Average Flow"}
+        />
+        <PeackAverageChart
+          average={getAverageGroupedByDay(temperatures)}
+          max={getPeakGroupedByDay(temperatures)}
+          title={"Peak / Average Temperature"}
+        />
       </div>
-      <div style={{width: "50%", maxHeight: "400px"}}>
-        <MoodsChart moods={moods} />
-      </div>
-      <div style={{width: "50%", maxHeight: "400px"}}>
-        <FlowsChart flows={flows} />
-      </div>
-      <div style={{width: "50%", maxHeight: "400px"}}>
+      <div style={{maxHeight: "200px", display: "flex", flexDirection: "row"}}>
         <HeadcountChart headcounts={headcounts} />
       </div>
     </>
   )
 }
+

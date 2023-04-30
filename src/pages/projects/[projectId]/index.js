@@ -1,8 +1,6 @@
-import {useEffect} from "react"
-import {Chart} from "chart.js";
 import {getCalibrationIds} from "@/modules/dcm";
-import config from "@/config";
 import Link from "next/link";
+import {useEffect} from "react";
 
 export default function Page(props) {
   let {projectId, calibrations} = props
