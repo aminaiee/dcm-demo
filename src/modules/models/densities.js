@@ -1,9 +1,9 @@
-import config from "@/config";
-import {ModelBase} from "./base"
 import {ONE_DAY_IN_MSEC, getDate} from '@/utils/datetime';
-import {getFlows} from "@/modules/dcm";
+import {getDensities} from '../dcm';
+import {ModelBase} from './base';
+import config from '@/config';
 
-export class Flows extends ModelBase {
+export class Densities extends ModelBase {
 	#startTimestamp
 
 	constructor(projectId, calibrationId, updateInterval = 60) {
@@ -19,11 +19,12 @@ export class Flows extends ModelBase {
 		let endTimestamp = this.#startTimestamp + ONE_DAY_IN_MSEC
 
 		try {
-			let data = await getFlows(this.calibrationId, this.#startTimestamp, endTimestamp)
-			for (const {timestamp, speed} of data) {
+			let data = await getDensities(this.calibrationId, this.#startTimestamp, endTimestamp)
+			for (const {timestamp, density, headcount} of data) {
 				this.sendEvent({
 					timestamp: Date.parse(timestamp),
-					speed
+					density,
+					headcount,
 				})
 			}
 
@@ -33,7 +34,7 @@ export class Flows extends ModelBase {
 				this.#startTimestamp == now ? this.updateInterval * 1000 : 100
 			)
 		} catch (err) {
-			console.log(err)
+			//console.log(err)
 			setTimeout(() => this.onFetchData(), 1000)
 		}
 	}

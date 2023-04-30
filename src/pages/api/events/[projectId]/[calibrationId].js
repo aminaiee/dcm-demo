@@ -6,16 +6,35 @@ export default function handler(request, response) {
 
   let p = new DCMProject(projectId, calibrationId)
 
-  p.addFlowEventListener(({timestamp, speed}) => {
+  p.flows.addEventListener(({timestamp, speed}) => {
     if (!response.finished) {
-      const eventString = `id: 1\nevent: flow\ndata: {"x": ${timestamp}, "y": ${speed}}\n\n`
-      //eventHistory.push(eventString);
+      const eventString = `event: flow\ndata: {"t": ${timestamp}, "speed": ${speed}}\n\n`
       response.write(eventString);
-      //response.write(JSON.stringify({timestamp, speed}));
     }
   })
 
-  console.log(`Request url: ${request.url}`);
+
+  p.moods.addEventListener(({timestamp, mood}) => {
+    if (!response.finished) {
+      const eventString = `event: mood\ndata: {"t": ${timestamp}, "mood": ${mood}}\n\n`
+      response.write(eventString);
+    }
+  })
+
+
+  p.densities.addEventListener(({timestamp, density, headcount}) => {
+    if (!response.finished) {
+      const eventString = `event: density\ndata: {"t": ${timestamp}, "density": ${density}, "headcount": ${headcount}}\n\n`
+      response.write(eventString);
+    }
+  })
+
+  p.temperatures.addEventListener(({timestamp, temperature}) => {
+    if (!response.finished) {
+      const eventString = `event: temperature\ndata: {"t": ${timestamp}, "temperature": ${temperature}}\n\n`
+      response.write(eventString);
+    }
+  })
 
   request.on('close', () => {
     console.log('request closed')

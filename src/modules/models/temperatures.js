@@ -1,14 +1,19 @@
-import config from "@/config";
-import {ModelBase} from "./base"
+import config from '@/config';
+import {getTemperatures} from '../whether';
+import {ModelBase} from './base';
 import {ONE_DAY_IN_MSEC, getDate} from '@/utils/datetime';
-import {getFlows} from "@/modules/dcm";
 
-export class Flows extends ModelBase {
+
+export class Temperatures extends ModelBase {
 	#startTimestamp
 
-	constructor(projectId, calibrationId, updateInterval = 60) {
+
+	constructor(projectId, calibrationId, latitude, longitude, updateInterval = 300) {
 		super(projectId, calibrationId, updateInterval)
 		this.#startTimestamp = getDate(config.dataRetentionDays).getTime()
+		this.latitude = latitude
+		this.longitude = longitude
+		this.lastSentTimestamp = 0
 	}
 
 	async onFetchData() {
@@ -19,12 +24,12 @@ export class Flows extends ModelBase {
 		let endTimestamp = this.#startTimestamp + ONE_DAY_IN_MSEC
 
 		try {
-			let data = await getFlows(this.calibrationId, this.#startTimestamp, endTimestamp)
-			for (const {timestamp, speed} of data) {
-				this.sendEvent({
-					timestamp: Date.parse(timestamp),
-					speed
-				})
+			let data = await getTemperatures(this.latitude, this.longitude, this.#startTimestamp)
+			for (const {timestamp, temperature} of data) {
+				if (timestamp > this.lastSentTimestamp) {
+					this.sendEvent({timestamp, temperature})
+					this.lastSentTimestamp = timestamp
+				}
 			}
 
 			this.#startTimestamp = Math.min(now, endTimestamp)

@@ -1,9 +1,10 @@
-import config from "@/config";
-import {ModelBase} from "./base"
+import config from '@/config';
+import {getMoods} from '../dcm';
+import {ModelBase} from './base';
 import {ONE_DAY_IN_MSEC, getDate} from '@/utils/datetime';
-import {getFlows} from "@/modules/dcm";
 
-export class Flows extends ModelBase {
+
+export class Moods extends ModelBase {
 	#startTimestamp
 
 	constructor(projectId, calibrationId, updateInterval = 60) {
@@ -19,12 +20,14 @@ export class Flows extends ModelBase {
 		let endTimestamp = this.#startTimestamp + ONE_DAY_IN_MSEC
 
 		try {
-			let data = await getFlows(this.calibrationId, this.#startTimestamp, endTimestamp)
-			for (const {timestamp, speed} of data) {
-				this.sendEvent({
-					timestamp: Date.parse(timestamp),
-					speed
-				})
+			let data = await getMoods(this.calibrationId, this.#startTimestamp, endTimestamp)
+			for (const {timestamp, mood} of data) {
+				if (timestamp && mood) {
+					this.sendEvent({
+						timestamp: Date.parse(timestamp),
+						mood,
+					})
+				}
 			}
 
 			this.#startTimestamp = Math.min(now, endTimestamp)
@@ -36,5 +39,6 @@ export class Flows extends ModelBase {
 			console.log(err)
 			setTimeout(() => this.onFetchData(), 1000)
 		}
+
 	}
 }

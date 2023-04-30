@@ -1,1 +1,0 @@
-export const ONE_DAY_IN_MSEC = 86400000 //TODO
